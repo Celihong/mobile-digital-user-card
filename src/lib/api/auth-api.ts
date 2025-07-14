@@ -2,7 +2,7 @@ import axios from "@/lib/api/request";
 import { AuthLoginType, AuthRegisterType } from "@/types/auth-type";
 
 export const authRequest = () => {
-  const AUTH_REGISTER = async (payload: AuthRegisterType) => {
+  const AUTH_REGISTER = async (payload: AuthRegisterType): Promise<any> => {
     return await axios({
       url: "/auth/register",
       method: "POST",

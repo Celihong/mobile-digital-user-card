@@ -1,135 +1,176 @@
 "use client";
-import { useMutation } from "@tanstack/react-query";
-import { zodResolver } from "@hookform/resolvers/zod";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+
+import { authRequest } from "@/lib/api/auth-api";
 import { useDeviceStore } from "@/store/device-store";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Form,
-  FormControl,
   FormField,
   FormItem,
+  FormControl,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { useEffect } from "react";
 import { AuthRegisterType } from "@/types/auth-type";
-import { authRequest } from "@/lib/api/auth-api";
+
 const RegisterSchema = z.object({
-  user_name: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-  full_name: z.string().min(2, {
-    message: "Fullname must be at least 2 characters.",
-  }),
-  email: z.string().email({
-    message: "Fullname must be at least 2 characters.",
-  }),
-  password: z.string().min(2, {
-    message: "Password must be at least 2 characters.",
-  }),
+  name: z.string().min(1, { message: "Name is required" }),
+  user_name: z.string().min(2, { message: "Username is required" }),
+  email: z.string().email({ message: "Invalid email" }),
+  password: z.string().min(6, { message: "Minimum 6 characters" }),
+  full_name: z.string().min(1, { message: "Full name is required" }),
 });
 
-const Register = () => {
-  const { AUTH_REGISTER } = authRequest();
+export default function Register() {
+  const router = useRouter();
   const { device, fetchDeviceInfo } = useDeviceStore();
-  console.log(device);
+  const { AUTH_REGISTER } = authRequest();
+
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
-      user_name: "",
-      password: "",
-      email: "",
       full_name: "",
+      user_name: "",
+      email: "",
+      password: "",
     },
   });
 
   const { mutate, isPending } = useMutation({
     mutationKey: ["register"],
     mutationFn: (payload: AuthRegisterType) => AUTH_REGISTER(payload),
-    onSuccess: (data) => {
-      console.log("response data", data);
+    onSuccess: () => {
+      console.log("✅ Registration Success");
+      router.push("/login");
+    },
+    onError: (error: any) => {
+      console.error("❌ Registration Error:", error.message);
     },
   });
 
-  function onSubmit(data: z.infer<typeof RegisterSchema>) {
+  const onSubmit = (data: z.infer<typeof RegisterSchema>) => {
+    console.log("Form submitted:", data);
     mutate({
       ...data,
-      device_name: device?.device_name,
-      device_type: device?.device_type,
       os: device?.os,
+      ip_address: device?.ip_address ?? undefined,
       browser: device?.browser,
-      ip_address: device?.ip_address,
+      device_type: device?.device_type,
+      device_name: device?.device_name,
     });
-  }
+  };
+
   useEffect(() => {
     fetchDeviceInfo();
   }, [fetchDeviceInfo]);
 
   return (
-    <div className="mx-auto w-full max-w-md shadow-lg rounded-2xl p-4 mt-12">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="user_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Username</FormLabel>
-                <FormControl>
-                  <Input placeholder="username" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white p-8 shadow-md rounded">
+        <div className="text-center">
+          <img
+            src="https://www.svgrepo.com/show/301692/login.svg"
+            alt="Logo"
+            className="mx-auto h-12 w-12"
           />
-          <FormField
-            control={form.control}
-            name="full_name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Fullname</FormLabel>
-                <FormControl>
-                  <Input placeholder="fullname" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="password" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={isPending}>
-            {isPending ? "Submitting" : "Submit"}
-          </Button>
-        </form>
-      </Form>
+          <h2 className="mt-6 text-2xl font-bold text-gray-900">
+            Create an Account
+          </h2>
+        </div>
+
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-6 space-y-5"
+          >
+            <FormField
+              control={form.control}
+              name="full_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ful Name</FormLabel>
+                  <FormControl>
+                    <Input placeholder="John Doe" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="user_name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Username</FormLabel>
+                  <FormControl>
+                    <Input placeholder="john123" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="email"
+                      placeholder="you@example.com"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="••••••" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button
+              type="submit"
+              disabled={isPending}
+              className="w-full bg-blue-600 text-white hover:bg-blue-500 py-2 rounded"
+            >
+              {isPending ? "Creating..." : "Create Account"}
+            </Button>
+
+            <p className="text-center text-sm text-gray-600 mt-4">
+              Already have an account?{" "}
+              <a
+                href="/login"
+                className="text-blue-600 font-medium hover:underline"
+              >
+                Login
+              </a>
+            </p>
+          </form>
+        </Form>
+      </div>
     </div>
   );
-};
-export default Register;
+}
