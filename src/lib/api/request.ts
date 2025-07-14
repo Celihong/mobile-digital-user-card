@@ -1,4 +1,3 @@
-import { CookieName } from "@/types/cookie-enum";
 import axios, { type AxiosRequestConfig } from "axios";
 import Cookies from "js-cookie";
 import { useAuthStore } from "@/store/auth-store";
@@ -74,7 +73,7 @@ axiosInstance.interceptors.response.use(
             // },
           });
           const { accessToken } = response.data;
-          Cookies.set(CookieName.ACCESS_TOKEN, accessToken);
+          Cookies.set("accessToken", accessToken);
           error.config.headers["Authorization"] = `Bearer ${accessToken}`;
 
           // Retry all requests in the queue with the new token
