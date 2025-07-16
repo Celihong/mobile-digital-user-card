@@ -46,9 +46,8 @@ export default function Login() {
     mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
     onSuccess: (data) => {
       console.log("✅ Login Success:", data);
-      
 
-      router.push("/profile");
+      router.push("/");
     },
     onError: (error: any) => {
       console.error("❌ Login Error:", error.message);

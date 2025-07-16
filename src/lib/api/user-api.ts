@@ -8,8 +8,16 @@ export const userRequest = () => {
       method: "GET",
     });
   };
-  return {
-    PROFILE,
+  const updatedProfile = async (payload: Partial<IUser>): Promise<IUser> => {
+    return await axios({
+      url: "/user/update-profile",
+      method: "PUT",
+      data: payload,
+    });
   };
 
+  return {
+    PROFILE,
+    updatedProfile,
+  };
 };
