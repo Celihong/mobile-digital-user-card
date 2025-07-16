@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { z } from "zod";
+import { any, z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
@@ -46,7 +46,9 @@ export default function Login() {
     mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
     onSuccess: (data) => {
       console.log("✅ Login Success:", data);
-      // router.push("/card");
+      
+
+      router.push("/profile");
     },
     onError: (error: any) => {
       console.error("❌ Login Error:", error.message);
@@ -123,7 +125,7 @@ export default function Login() {
               <p className="text-center text-sm text-gray-500 mt-6">
                 Don&apos;t have an account yet?{" "}
                 <Link
-                  href="/auth/register"
+                  href="/register"
                   className="font-semibold text-blue-500 hover:underline"
                 >
                   Register

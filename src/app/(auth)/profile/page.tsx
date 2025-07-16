@@ -61,13 +61,16 @@ export default function Home() {
               </div>
 
               {/* Buttons */}
-              <div className="flex flex-col items-center gap-2 pt-2">
-                <Button variant="outline" className="w-1/2">
+              <div className="flex items-center gap-2 pt-2">
+                <Button variant="outline" className="w-1/3">
                   Edit Profile
+                </Button>
+                <Button variant="outline" className="w-1/3">
+                  Add Card
                 </Button>
                 <Button
                   variant="destructive"
-                  className="w-1/2"
+                  className="w-1/3"
                   onClick={handleLogout}
                 >
                   Logout
