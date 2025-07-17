@@ -51,7 +51,7 @@ export default function UpdateUserDialog({
   setOpen,
 }: Props) {
   const queryClient = useQueryClient();
-  const { updatedProfile } = userRequest(); // ✅ FIXED
+  const { updatedProfile } = userRequest();
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,8 +78,6 @@ export default function UpdateUserDialog({
     setAvatarFile(null);
     setAvatarPreview(user?.avatar || null);
     form.setValue("avatar", user?.avatar || "");
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   const onSubmit = async (data: FormValues) => {
@@ -90,10 +88,13 @@ export default function UpdateUserDialog({
         setIsSubmitting(true);
         const formData = new FormData();
         formData.append("image", avatarFile);
-        const res = await fetch(`http://localhost:8000/api/v1/upload/upload-image`, {
-          method: "POST",
-          body: formData,
-        });
+        const res = await fetch(
+          `http://localhost:8000/api/v1/upload/upload-image`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
         const uploadData = await res.json();
         avatarUrl = uploadData.url;
       } catch (error) {
@@ -109,14 +110,13 @@ export default function UpdateUserDialog({
       avatar: avatarUrl,
     };
 
-    console.log("Final payload:", finalPayload);
     onSave(finalPayload);
     updateUserProfileMutation.mutate(finalPayload);
   };
 
   const updateUserProfileMutation = useMutation({
     mutationKey: ["update-user-profile", "me"],
-    mutationFn: (payload: FormValues) => updatedProfile(payload), // ✅ FIXED
+    mutationFn: (payload: FormValues) => updatedProfile(payload),
     onSuccess: () => {
       form.reset();
       setAvatarFile(null);
@@ -149,24 +149,40 @@ export default function UpdateUserDialog({
     setAvatarFile(null);
     setAvatarPreview(null);
     form.setValue("avatar", "");
-    const fileInput = document.getElementById("avatarUpload") as HTMLInputElement;
+    const fileInput = document.getElementById(
+      "avatarUpload"
+    ) as HTMLInputElement;
     if (fileInput) fileInput.value = "";
   };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogContent className="sm:max-w-md">
-        <AlertDialogHeader>
+        <AlertDialogHeader className="relative">
           <AlertDialogTitle>Update Profile</AlertDialogTitle>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 text-lg"
+            aria-label="Close"
+          >
+            ✕
+          </button>
         </AlertDialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="space-y-4 pt-4"
+          >
             <div className="flex flex-col items-center space-y-2">
-              <label htmlFor="avatarUpload" className="cursor-pointer relative group">
+              <label
+                htmlFor="avatarUpload"
+                className="cursor-pointer relative group"
+              >
                 <div className="w-24 h-24 rounded-full border overflow-hidden bg-gray-100">
                   {avatarPreview ? (
                     <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
-                      <AvatarImage src={avatarPreview} alt={avatarPreview} />
+                      <AvatarImage src={avatarPreview} alt="Avatar" />
                       <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
                         {avatarPreview}
                       </AvatarFallback>
@@ -258,7 +274,11 @@ export default function UpdateUserDialog({
             />
 
             <div className="flex justify-end gap-2 pt-4">
-              <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setOpen(false)}
+              >
                 Cancel
               </Button>
               <Button
