@@ -103,11 +103,6 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-slate-200 py-8 px-4 sm:px-6">
       <div className="w-full max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden mb-8 relative">
         <div className="h-32 bg-gradient-to-r from-blue-500 to-pink-500 relative rounded-t-2xl">
-          <img
-            src="https://i.imgur.com/MHWLac7.gif"
-            className="h-32 w-full object-cover"
-            alt="Banner"
-          />
           <div className="absolute inset-0 bg-black/10 rounded-t-2xl" />
 
           {/* 🔄 Updated Logout Button */}
