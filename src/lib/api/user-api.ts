@@ -18,6 +18,5 @@ export const userRequest = () => {
 
   return {
     PROFILE,
-    updatedProfile,
-  };
+    updatedProfile,  };
 };
