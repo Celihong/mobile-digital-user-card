@@ -13,7 +13,9 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CardItem } from "@/types/card-type";
-import CorporateCard from "@/components/profile-card/corporate-card";
+import CorporateCard from "@/components/corporate-card";
+import Modern from "@/components/modern";
+import Minimal from "@/components/minimal";
 
 import { IUser, UserData } from "@/types/user-type";
 
@@ -109,8 +111,6 @@ export default function Home() {
             alt="Banner"
           />
           <div className="absolute inset-0 bg-black/10 rounded-t-2xl" />
-
-          {/* 🔄 Updated Logout Button */}
           <Button
             onClick={handleLogout}
             className="absolute top-4 right-4 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm hover:bg-gray-100 hover:text-black transition"
@@ -263,6 +263,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 🧩 Card Rendering Section */}
       <div className="w-full max-w-xl mx-auto space-y-6">
         {me?.data?.idCard?.length === 0 && (
           <div className="text-center text-gray-500">
@@ -278,7 +279,12 @@ export default function Home() {
             {card.card_type === "Corporate" && (
               <CorporateCard me={me} card={card} idx={idx} />
             )}
-            {/* Add other card types as needed */}
+            {card.card_type === "Modern" && (
+              <Modern me={me} card={card} idx={idx} />
+            )}
+            {card.card_type === "Minimal" && (
+              <Minimal me={me} card={card} idx={idx} />
+            )}
           </div>
         ))}
       </div>
