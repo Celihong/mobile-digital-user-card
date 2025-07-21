@@ -22,7 +22,6 @@ import {
 import { AuthRegisterType } from "@/types/auth-type";
 
 const RegisterSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
   user_name: z.string().min(2, { message: "Username is required" }),
   email: z.string().email({ message: "Invalid email" }),
   password: z.string().min(6, { message: "Minimum 6 characters" }),
