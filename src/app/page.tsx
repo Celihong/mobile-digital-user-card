@@ -13,6 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { CardItem } from "@/types/card-type";
+
+import CorporateCard from "@/components/corporate-card";
+import Modern from "@/components/modern";
+import Minimal from "@/components/minimal";
+
 import { IUser } from "@/types/user-type";
 
 import CorporateCard from "@/components/profile-card/corporate-card";
@@ -136,6 +141,7 @@ export default function Home() {
         </div>
       </div>
 
+      {/* 🧩 Card Rendering Section */}
       <div className="w-full max-w-xl mx-auto space-y-6">
         {me?.data?.idCard?.length === 0 && (
           <div className="text-center text-gray-500">
@@ -151,6 +157,14 @@ export default function Home() {
             {card.card_type === "Corporate" && (
               <CorporateCard me={me} card={card} idx={idx} />
             )}
+
+            {card.card_type === "Modern" && (
+              <Modern me={me} card={card} idx={idx} />
+            )}
+            {card.card_type === "Minimal" && (
+              <Minimal me={me} card={card} idx={idx} />
+            )}
+
           </div>
         ))}
       </div>

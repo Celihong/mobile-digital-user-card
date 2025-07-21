@@ -49,7 +49,9 @@ export default function Register() {
     mutationFn: (payload: AuthRegisterType) => AUTH_REGISTER(payload),
     onSuccess: () => {
       console.log("✅ Registration Success");
-      router.push("/login");
+
+      router.push("/create-card");
+
     },
     onError: (error: any) => {
       console.error("❌ Registration Error:", error.message);
