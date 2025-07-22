@@ -14,13 +14,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { CardItem } from "@/types/card-type";
 
-import CorporateCard from "@/components/corporate-card";
 import Modern from "@/components/modern";
 import Minimal from "@/components/minimal";
 
 import { IUser } from "@/types/user-type";
 
-import CorporateCard from "@/components/profile-card/corporate-card";
+import CorporateCard from "@/components/corporate-card";
 import UpdateUserDialog from "@/components/profile-card/formedit";
 
 export default function Home() {

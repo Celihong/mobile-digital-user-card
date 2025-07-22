@@ -16,7 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { CardItem } from "@/types/card-type";
 import { IUser } from "@/types/user-type";
 
-const CorporateCard = ({
+const Corporate = ({
   me,
   card,
   idx,
@@ -176,4 +176,4 @@ const CorporateCard = ({
   );
 };
 
-export default CorporateCard;
+export default Corporate;
