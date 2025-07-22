@@ -127,3 +127,5 @@ export interface ISocialLink {
   updated_at: string;
   created_at: string;
 }
+
+export type { CardItem };
