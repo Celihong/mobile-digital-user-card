@@ -163,7 +163,6 @@ export default function Home() {
             {card.card_type === "Minimal" && (
               <Minimal me={me} card={card} idx={idx} />
             )}
-
           </div>
         ))}
       </div>
