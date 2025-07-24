@@ -1,52 +1,56 @@
+// stores/useDeviceStore.ts
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import { UAParser } from "ua-parser-js";
-import FingerPrintjs from "@fingerprintjs/fingerprintjs";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
 
-type DeviceInfoType = {
+type DeviceInfo = {
+  browser: string;
+  os: string;
   device_name: string;
   device_type: string;
-  os: string;
-  ip_address: string;
-  browser: string;
   fingerprint: string;
+  device_model: string;
+  ip_address: string | null; // optional if you fetch it later
 };
 
 type DeviceState = {
-  device: DeviceInfoType | null;
-  fetchDeviceInfo: () => void;
+  device: DeviceInfo | null;
+  fetchDeviceInfo: () => Promise<void>;
 };
 
 export const useDeviceStore = create<DeviceState>()(
   devtools((set) => ({
     device: null,
+
     fetchDeviceInfo: async () => {
       const parser = new UAParser();
       const result = parser.getResult();
 
-      //fingerprint
-      const fp = await FingerPrintjs.load();
-      const fingerPrintResult = await fp.get();
+      // Get fingerprint
+      const fp = await FingerprintJS.load();
+      const fingerprintResult = await fp.get();
 
-      //fetch ip
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      let ip_address = null as any;
+      // Optional: fetch IP address (external service or backend)
+      let ip_address: string | null = null;
       try {
         const res = await fetch("https://api.ipify.org?format=json");
         const data: { ip: string } = await res.json();
         ip_address = data.ip;
-      } catch (error) {
-        console.log(error);
+      } catch (e) {
+        console.error("Failed to get IP:", e);
       }
 
-      const info: DeviceInfoType = {
-        browser: result.browser.name || "unknown",
-        os: result.os.name || "unknown",
-        device_name: result.device.vendor || "unknown",
-        fingerprint: fingerPrintResult.visitorId,
-        device_type: result.device.model || "unknown",
+      const info: DeviceInfo = {
+        browser: result.browser.name || "Unknown",
+        os: result.os.name || "Unknown",
+        device_type: result.device.type || "desktop",
+        fingerprint: fingerprintResult.visitorId,
+        device_name: result.device.vendor || "Unknown",
+        device_model: result.device.model || "Unknown",
         ip_address,
       };
+
       set({ device: info });
     },
   }))

@@ -1,21 +1,18 @@
 import React from "react";
 import {
   Download,
-  Linkedin,
-  Github,
-  Mail,
-  Phone,
-  MapPin,
   Globe,
+  Mail,
+  MapPin,
+  Phone,
 } from "lucide-react";
-import Link from "next/link";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { CardItem } from "@/types/card-type";
 import { IUser } from "@/types/user-type";
+import { CardItem } from "@/types/card-type";
 
-const MinimalCard = ({
+const Modern = ({
   me,
   card,
   idx,
@@ -25,57 +22,41 @@ const MinimalCard = ({
   idx: number;
 }) => {
   return (
-      <div className="relative max-w-sm mx-auto p-6">
-      <Card className="rounded-3xl overflow-hidden shadow-xl bg-gradient-to-br from-[#5c5b59] via-[#9c2222] to-[#4c1d95] text-white border border-purple-900">
-        <CardContent className="p-6 text-gray-900">
-          <Link href={`/update-card/${card.id}`} className="block mb-4 text-right">
-            <Button
-              size="sm"
-              variant="ghost"
-              className="text-gray-500 hover:text-gray-900"
-            >
-              Edit
-            </Button>
-          </Link>
-
-          <div className="flex flex-col items-center space-y-3">
-            <Avatar className="w-20 h-20 rounded-full border border-gray-300">
-              <AvatarImage src={me?.data?.avatar} alt={me?.data?.user_name} />
-              <AvatarFallback>{me?.data?.user_name?.[0]}</AvatarFallback>
-            </Avatar>
-
-            <h2 className="text-lg font-medium">{me?.data.full_name}</h2>
-            <p className="text-xs text-gray-500 uppercase tracking-widest">{card.job}</p>
-            <p className="text-xs font-semibold text-gray-700 mt-1 truncate max-w-full text-center">
-              {card.company}
+    <div className="max-w-md mx-auto mt-10 p-6 animate-fade-in">
+      <Card className="rounded-3xl bg-gradient-to-tr from-cyan-600 via-blue-700 to-indigo-800 text-white shadow-lg border border-cyan-700">
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center text-center space-y-4">
+            <div className="w-28 h-28 rounded-full border-4 border-white shadow-xl overflow-hidden">
+              <Avatar className="w-full h-full">
+                <AvatarImage src={me?.data?.avatar} alt={me?.data?.user_name} />
+                <AvatarFallback className="bg-gradient-to-br from-cyan-400 to-blue-600 text-white text-3xl font-bold">
+                  {me?.data?.user_name?.[0]}
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <h1 className="text-3xl font-extrabold tracking-wide">{me?.data.full_name}</h1>
+            <p className="px-6 py-1 bg-cyan-700 rounded-full text-sm font-semibold tracking-wide">
+              {card.job}
             </p>
+            <p className="mt-4 text-center text-cyan-200 text-sm leading-relaxed">{card.bio}</p>
 
-            <p className="mt-3 text-center text-gray-600 text-sm leading-relaxed">
-              {card.bio}
-            </p>
-
-            <div className="mt-6 space-y-3 w-full text-gray-700 text-sm">
-              <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-gray-400" />
+            <div className="grid grid-cols-2 gap-4 w-full mt-6 text-sm">
+              <div className="flex items-center gap-2 bg-cyan-700 rounded-lg p-3">
+                <Phone className="w-5 h-5 text-white" />
                 <span>{card.phone}</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Mail className="w-5 h-5 text-gray-400" />
+              <div className="flex items-center gap-2 bg-blue-700 rounded-lg p-3">
+                <Mail className="w-5 h-5 text-white" />
                 <span>{me?.data?.email}</span>
               </div>
-              <div className="flex items-center space-x-3">
-                <Globe className="w-5 h-5 text-gray-400" />
-                <Link
-                  href={card.web_site}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="truncate underline text-gray-600 hover:text-gray-800"
-                >
+              <div className="flex items-center gap-2 bg-indigo-700 rounded-lg p-3">
+                <Globe className="w-5 h-5 text-white" />
+                <a href={card.web_site} target="_blank" rel="noopener noreferrer" className="truncate underline hover:text-cyan-300">
                   {card.web_site}
-                </Link>
+                </a>
               </div>
-              <div className="flex items-center space-x-3">
-                <MapPin className="w-5 h-5 text-gray-400" />
+              <div className="flex items-center gap-2 bg-purple-700 rounded-lg p-3">
+                <MapPin className="w-5 h-5 text-white" />
                 <span className="truncate">{card.address}</span>
               </div>
             </div>
@@ -131,27 +112,10 @@ const MinimalCard = ({
                 document.body.removeChild(link);
                 window.URL.revokeObjectURL(url);
               }}
-              className="w-full mt-6 bg-gray-900 text-white rounded-lg py-3 font-semibold hover:bg-gray-800 transition"
+              className="mt-8 w-full bg-gradient-to-r from-cyan-400 to-blue-500 hover:brightness-110 font-semibold rounded-xl py-3 transition-transform hover:scale-105"
             >
               <Download className="w-5 h-5 mr-2 inline-block" /> Save Contact
             </Button>
-
-            <div className="grid grid-cols-2 gap-4 mt-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:text-gray-900"
-              >
-                <Linkedin className="w-5 h-5 mr-1 inline-block" /> LinkedIn
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-gray-600 hover:text-gray-900"
-              >
-                <Github className="w-5 h-5 mr-1 inline-block" /> GitHub
-              </Button>
-            </div>
           </div>
         </CardContent>
       </Card>
@@ -159,4 +123,4 @@ const MinimalCard = ({
   );
 };
 
-export default MinimalCard;
+export default Modern;

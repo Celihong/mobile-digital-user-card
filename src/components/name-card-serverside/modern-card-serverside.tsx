@@ -18,74 +18,75 @@ const ModernCardServerSide = ({
   return (
     <div className="mt-10 w-full max-w-md mx-auto p-4">
       <div className="grid grid-cols-1 gap-6">
-        <div key={idx}>
-          <div className="bg-slate-800 border-slate-700 shadow-2xl rounded-2xl">
+        <div key={idx} className="group transition-transform hover:scale-105 duration-500 ease-in-out">
+          <div className="bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-800 border border-indigo-500 shadow-2xl rounded-3xl overflow-hidden">
             <CardContent className="p-0">
               {/* Header Section */}
-              <div className="bg-gradient-to-r from-cyan-500 to-blue-500 p-6 relative overflow-hidden rounded-t-2xl">
+              <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-6 relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/10 rounded-full translate-y-12 -translate-x-12"></div>
-                <div className="relative z-10">
-                  <Avatar className="w-24 h-24 border-4 border-white shadow-lg">
+                <div className="relative z-10 text-center">
+                  <Avatar className="w-24 h-24 mx-auto border-4 border-white shadow-lg">
                     <AvatarImage src={me?.avatar} alt={me?.user_name} />
-                    <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
+                    <AvatarFallback className="text-2xl font-semibold bg-indigo-500 text-white">
                       {me?.user_name}
                     </AvatarFallback>
                   </Avatar>
-                  <h1 className="text-2xl font-bold text-white mb-1">
+                  <h1 className="text-2xl font-bold text-white mt-2">
                     {me?.full_name}
                   </h1>
-                  <p className="text-cyan-100 font-medium">{card.job}</p>
+                  <p className="text-indigo-200 font-medium">{card.job}</p>
                 </div>
               </div>
 
               {/* Card Content */}
-              <div className="p-6 space-y-4">
+              <div className="p-6 space-y-5 text-white">
                 <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 bg-cyan-500 rounded-full"></div>
-                  <span className="text-cyan-400 text-sm font-medium">
+                  <div className="w-2 h-2 bg-purple-400 rounded-full animate-ping"></div>
+                  <span className="text-sm font-semibold text-indigo-200">
                     {card.company || "N/A"}
                   </span>
                 </div>
 
-                <p className="text-slate-300 text-sm leading-relaxed">
+                <p className="text-sm leading-relaxed text-gray-300 italic">
                   {card.bio || "No bio provided."}
                 </p>
 
                 {/* Contact Grid */}
-                <div className="grid grid-cols-2 gap-3 py-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Phone className="w-3 h-3 text-cyan-400" />
-                      <span className="text-xs text-slate-400">Phone</span>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-sm text-indigo-300">
+                      <Phone className="w-4 h-4" /> Phone
                     </div>
-                    <p className="text-sm text-white font-mono">{card.phone}</p>
+                    <p className="text-sm font-mono text-white">{card.phone}</p>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Mail className="w-3 h-3 text-cyan-400" />
-                      <span className="text-xs text-slate-400">Email</span>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-sm text-indigo-300 group hover:animate-bounce">
+                      <Mail className="w-4 h-4" /> Email
                     </div>
-                    <p className="text-sm text-white break-all">{me?.email}</p>
+                    <p className="text-sm font-mono text-white break-all">
+                      {me?.email}
+                    </p>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Globe className="w-3 h-3 text-cyan-400" />
-                      <span className="text-xs text-slate-400">Website</span>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-sm text-indigo-300">
+                      <Globe className="w-4 h-4" /> Website
                     </div>
                     <p className="text-sm text-white">{card.web_site}</p>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="w-3 h-3 text-cyan-400" />
-                      <span className="text-xs text-slate-400">Location</span>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 text-sm text-indigo-300">
+                      <MapPin className="w-4 h-4" /> Location
                     </div>
                     <p className="text-sm text-white">{card.address}</p>
                   </div>
                 </div>
 
                 {/* Buttons */}
-                <div className="space-y-3 pt-4">
+                <div className="pt-4 space-y-3">
                   <Button
                     onClick={async () => {
                       const toBase64 = async (url: string) => {
@@ -133,10 +134,6 @@ const ModernCardServerSide = ({
                       const url = window.URL.createObjectURL(blob);
                       const link = document.createElement("a");
                       link.href = url;
-                      // link.download = `${me?.data.full_name.replace(
-                      //   " ",
-                      //   "_"
-                      // )}_${idx + 1}.vcf`;
                       link.download = `${(
                         me?.full_name ?? "Unnamed_User"
                       ).replace(" ", "_")}_${idx + 1}.vcf`;
@@ -146,30 +143,28 @@ const ModernCardServerSide = ({
                       document.body.removeChild(link);
                       window.URL.revokeObjectURL(url);
                     }}
-                    className="w-full bg-cyan-500 hover:bg-cyan-600 text-white"
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-md hover:shadow-lg transition duration-300"
                   >
-                    <Download className="w-4 h-4 mr-2" />
-                    Save Contact
+                    <Download className="w-4 h-4 mr-2" /> Save Contact
                   </Button>
-                  {card.socialLinks.map((res, idx: number) => {
-                    return (
-                      <div className="" key={idx}>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="border-slate-600 text-slate-300 hover:bg-slate-700 bg-transparent w-full"
-                        >
-                          <Avatar className="w-6 h-6">
-                            <AvatarImage src={res.icon} alt={res.platform} />
-                            <AvatarFallback className="text-2xl font-semibold bg-gradient-to-br from-blue-500 to-purple-600 text-white">
-                              {res.platform}
-                            </AvatarFallback>
-                          </Avatar>
-                          {res.platform}
-                        </Button>
-                      </div>
-                    );
-                  })}
+
+                  {card.socialLinks.map((res, idx: number) => (
+                    <div key={idx} className="">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex gap-2 border-indigo-500 text-purple hover:bg-indigo-700/20 transition duration-300 w-full items-center"
+                      >
+                        <Avatar className="w-6 h-6">
+                          <AvatarImage src={res.icon} alt={res.platform} />
+                          <AvatarFallback className="text-sm bg-gradient-to-br from-pink-500 to-fuchsia-600 text-white">
+                             {res.platform[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        {res.platform}
+                      </Button>
+                    </div>
+                  ))}
                 </div>
               </div>
             </CardContent>

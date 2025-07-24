@@ -2,41 +2,44 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { userRequest } from "@/lib/api/user-api";
-import { authRequest } from "@/lib/api/auth-api";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-
+import { useAuthStore } from "@/store/auth-store"; // Import the store
 import { User, Mail, Plus, Pencil, LogOut } from "lucide-react";
 import Link from "next/link";
-
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import { CardItem } from "@/types/card-type";
-
+import { IUser } from "@/types/user-type";
+import CorporateCard from "@/components/corporate-card";
 import Modern from "@/components/modern";
 import Minimal from "@/components/minimal";
-
-import { IUser } from "@/types/user-type";
-
-import CorporateCard from "@/components/corporate-card";
 import UpdateUserDialog from "@/components/profile-card/formedit";
 
 export default function Home() {
   const { PROFILE } = userRequest();
-  const { AUTH_LOGOUT } = authRequest();
-
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { isAuthenticated, logout } = useAuthStore(); // Use store
 
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [avatarUrlInput, setAvatarUrlInput] = useState<string>("");
   const [avatarEditOpen, setAvatarEditOpen] = useState(false);
   const [tempAvatarUrl, setTempAvatarUrl] = useState("");
 
+  // Check authentication on mount
+  // useEffect(() => {
+    
+  //   if (!isAuthenticated) {
+  //     router.push("/login");
+  //   }
+  // }, []);
+
+ 
   const { data: me, isLoading } = useQuery<IUser>({
     queryKey: ["me"],
     queryFn: PROFILE,
+    // enabled: isAuthenticated, // Only fetch profile if authenticated
   });
 
   useEffect(() => {
@@ -50,27 +53,15 @@ export default function Home() {
     setTempAvatarUrl(avatarUrlInput);
   }, [avatarUrlInput]);
 
-  const handleLogout = async () => {
-    try {
-      await AUTH_LOGOUT();
-    } catch (err) {
-      console.error("Logout failed:", err);
-    }
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    router.push("/login");
-  };
-
-  if (isLoading) return "Loading...";
+  // if (!isAuthenticated || isLoading) return "Loading...";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-slate-200 py-8 px-4 sm:px-6">
       <div className="w-full max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden mb-8 relative">
         <div className="h-32 bg-gradient-to-r from-blue-500 to-pink-500 relative rounded-t-2xl">
           <div className="absolute inset-0 bg-black/10 rounded-t-2xl" />
-
           <Button
-            onClick={handleLogout}
+            onClick={logout} // Use store's logout
             className="absolute top-4 right-4 px-3 py-1.5 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm hover:bg-gray-100 hover:text-black transition"
           >
             <LogOut className="w-4 h-4 mr-1" />
@@ -156,7 +147,6 @@ export default function Home() {
             {card.card_type === "Corporate" && (
               <CorporateCard me={me} card={card} idx={idx} />
             )}
-
             {card.card_type === "Modern" && (
               <Modern me={me} card={card} idx={idx} />
             )}
