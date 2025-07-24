@@ -1,36 +1,43 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🪪 Digital ID Card System
 
-## Getting Started
+A web application that shows a person's digital ID card. It has:
 
-First, run the development server:
+- A user site (for people to view their ID)
+- An admin dashboard (to manage all users)
+- A backend API (to store data and handle login)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌟 Features
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 👤 User Site (Mobile Friendly)
+- View your digital ID card
+- Login securely
+- Show QR Code
+- Update your profile
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 🧑‍💼 Admin Dashboard
+- Add, edit, or delete users
+- Search for users
+- Create and print ID cards
+- See and scan QR codes
 
-## Learn More
+### ⚙️ Backend API
+- Login and register
+- Save and update user info
+- Use PostgreSQL database
+- Use JWT tokens for login security
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🧱 Technologies Used
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Part        | Tech                    |
+|-------------|-------------------------|
+| User Site   | Next.js, Tailwind CSS   |
+| Admin Site  | React.js, Tailwind CSS  |
+| Backend     | Express.js, TypeScript  |
+| Database    | PostgreSQL, TypeORM     |
+| Auth        | JWT (Token Login)       |
+| State       | Zustand, Tanstack Query |
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
