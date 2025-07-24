@@ -1,19 +1,17 @@
 import React from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { Download, Globe, Mail, MapPin, Phone } from "lucide-react";
-import { Card, CardContent } from "./ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import Link from "next/link";
-import { CardItem } from "@/types/card-type";
-import { IUser } from "@/types/user-type";
+import { Card, CardContent } from "../ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { ICard, User } from "@/types/card-type";
 
-const MinimalCard = ({
+const MinimalCardServerSide = ({
   me,
   card,
   idx,
 }: {
-  me: IUser;
-  card: CardItem;
+  me: User;
+  card: ICard;
   idx: number;
 }) => {
   return (
@@ -21,25 +19,17 @@ const MinimalCard = ({
       <div key={idx} className="hover:scale-[1.02] transition-transform duration-500 ease-in-out">
         <Card className="bg-gradient-to-br from-slate-800 to-slate-950 text-white border-0 shadow-2xl rounded-2xl">
           <CardContent className="p-8">
-            {/* Edit Button */}
-            <Link href={`/update-card/${card.id}`} className="block text-right mb-2">
-              <Button size="sm" variant="ghost" className="text-teal-300 hover:bg-slate-800">
-                Edit
-              </Button>
-            </Link>
-
-            {/* Avatar & Name */}
             <div className="text-center border-b border-slate-700 pb-6 mb-6">
               <div className="w-24 h-24 mx-auto mb-4 border-4 border-teal-400 rounded-full overflow-hidden">
                 <Avatar className="w-full h-full">
-                  <AvatarImage src={me?.data?.avatar} alt={me?.data?.user_name} />
+                  <AvatarImage src={me?.avatar} alt={me?.user_name} />
                   <AvatarFallback className="text-xl font-semibold bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
-                    {me?.data?.user_name?.[0] ?? "U"}
+                    {me?.user_name?.[0] ?? "U"}
                   </AvatarFallback>
                 </Avatar>
               </div>
               <h1 className="text-2xl font-bold text-white mb-2 tracking-wider">
-                {me?.data?.full_name}
+                {me.full_name}
               </h1>
               <div className="bg-teal-500 text-white px-4 py-1 rounded-full inline-block">
                 <span className="text-sm font-medium">{card.job}</span>
@@ -47,14 +37,12 @@ const MinimalCard = ({
               <p className="text-teal-300 font-medium mt-2">{card.company}</p>
             </div>
 
-            {/* Bio */}
             <div className="text-center mb-6">
               <p className="text-slate-300 text-sm leading-relaxed italic">
                 {card.bio}
               </p>
             </div>
 
-            {/* Contact Info */}
             <div className="space-y-4 mb-6">
               <div className="flex items-center justify-between border-b border-slate-700 pb-2">
                 <div className="flex items-center gap-3">
@@ -72,7 +60,7 @@ const MinimalCard = ({
                     Electronic Mail
                   </span>
                 </div>
-                <span className="text-sm text-slate-300 break-all">{me?.data?.email}</span>
+                <span className="text-sm text-slate-300 break-all">{me?.email}</span>
               </div>
               <div className="flex items-center justify-between border-b border-slate-700 pb-2">
                 <div className="flex items-center gap-3">
@@ -81,14 +69,7 @@ const MinimalCard = ({
                     Website
                   </span>
                 </div>
-                <Link
-                  href={card.web_site}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sm text-slate-300 hover:underline"
-                >
-                  {card.web_site}
-                </Link>
+                <span className="text-sm text-slate-300">{card.web_site}</span>
               </div>
               <div className="flex items-center justify-between border-b border-slate-700 pb-2">
                 <div className="flex items-center gap-3">
@@ -101,7 +82,6 @@ const MinimalCard = ({
               </div>
             </div>
 
-            {/* Actions */}
             <div className="space-y-3">
               <Button
                 onClick={async () => {
@@ -117,17 +97,17 @@ const MinimalCard = ({
                     });
                   };
 
-                  const avatarBase64 = me?.data?.avatar ? await toBase64(me?.data?.avatar) : "";
+                  const avatarBase64 = me?.avatar ? await toBase64(me?.avatar) : "";
 
                   const vcard = [
                     "BEGIN:VCARD",
                     "VERSION:3.0",
-                    `FN:${me?.data?.full_name}`,
-                    `N:${me?.data?.full_name};;;;`,
+                    `FN:${me?.full_name}`,
+                    `N:${me?.full_name};;;;`,
                     `ORG:${card.company}`,
                     `TITLE:${card.job}`,
                     `TEL;TYPE=WORK,VOICE:${card.phone}`,
-                    `EMAIL;TYPE=PREF,INTERNET:${me?.data?.email}`,
+                    `EMAIL;TYPE=PREF,INTERNET:${me?.email}`,
                     avatarBase64 ? `PHOTO;ENCODING=b;TYPE=JPEG:${avatarBase64}` : "",
                     `URL:${card.web_site}`,
                     `ADR;TYPE=WORK:;;${card.address};;;;`,
@@ -144,7 +124,7 @@ const MinimalCard = ({
                   const url = window.URL.createObjectURL(blob);
                   const link = document.createElement("a");
                   link.href = url;
-                  link.download = `${(me?.data?.full_name ?? "Unnamed_User").replace(
+                  link.download = `${(me?.full_name ?? "Unnamed_User").replace(
                     " ",
                     "_"
                   )}_${idx + 1}.vcf`;
@@ -160,7 +140,7 @@ const MinimalCard = ({
                 Add to Address Book
               </Button>
               <div className="space-y-2">
-                {card.socialLinks?.map((res, idx: number) => {
+                {card.socialLinks.map((res, idx: number) => {
                   return (
                     <div className="" key={idx}>
                       <Button
@@ -187,4 +167,4 @@ const MinimalCard = ({
   );
 };
 
-export default MinimalCard;
+export default MinimalCardServerSide;

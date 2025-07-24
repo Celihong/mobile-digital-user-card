@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
-import { any, z } from "zod";
+import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { authRequest } from "@/lib/api/auth-api";
-
+import { useAuthStore } from "@/store/auth-store";
+import { jwtDecode } from "jwt-decode"; // Import jwtDecode
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -19,6 +20,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AuthLoginType } from "@/types/auth-type";
+
+interface JwtPayload {
+  roles: string[];
+}
 
 const LoginSchema = z.object({
   user_name: z.string().min(2, {
@@ -32,6 +37,7 @@ const LoginSchema = z.object({
 export default function Login() {
   const { AUTH_LOGIN } = authRequest();
   const router = useRouter();
+  const { setTokens } = useAuthStore();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -45,9 +51,28 @@ export default function Login() {
     mutationKey: ["login"],
     mutationFn: (payload: AuthLoginType) => AUTH_LOGIN(payload),
     onSuccess: (data) => {
-      console.log("✅ Login Success:", data);
+      console.log("✅ Login Success:", data.data);
+      
+        router.push("/");
+      
+      // if (data.data) {
+      //   const accessToken = data.data.access_token;
+      //   const refreshToken = data.data.refresh_token;
+      //   const decoded: JwtPayload = jwtDecode(accessToken);
+      //   const roles = decoded.roles || [];
 
-      router.push("/");
+      //   // Update store with tokens and roles
+      //   setTokens(accessToken, refreshToken, roles);
+      //   router.push("/");
+      // }
+  // const accessToken = data.data.access_token;
+  //     const refreshToken = data.data.refresh_token;
+  //     const decoded: JwtPayload = jwtDecode(accessToken);
+  //     const roles = decoded.roles || [];
+  //       // Update store with tokens and roles
+  //       setTokens(accessToken, refreshToken, roles);
+  //       router.push("/");
+    
     },
     onError: (error: any) => {
       console.error("❌ Login Error:", error.message);
@@ -122,7 +147,7 @@ export default function Login() {
               )}
 
               <p className="text-center text-sm text-gray-500 mt-6">
-                Don&apos;t have an account yet?{" "}
+                Don't have an account yet?{" "}
                 <Link
                   href="/register"
                   className="font-semibold text-blue-500 hover:underline"
